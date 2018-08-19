@@ -1,0 +1,205 @@
+body {
+	font-family: sans-serif;
+	min-width: 900px;
+}
+
+.content {
+	position: relative;
+	width: 800px;
+	margin: 20px auto;
+	padding: 20px;
+	background: #FFF;
+	box-shadow: 2px 2px 10px 1px rgba(0, 0, 0, .3);
+	z-index: 200;
+}
+
+.content_title {
+	margin: 0 0 20px;
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.fileInput {
+	margin: 0 0 20px;
+	padding: 20px;
+	background: #E0E0E0;
+}
+
+.fileInput_input {
+	font-size: 16px;
+}
+
+.operation {
+	margin: 0 0 20px;
+}
+
+.operation_button {
+	display: inline-block;
+	padding: 5px 15px;
+	border: 0;
+	border-radius: 4px;
+	font-size: 16px;
+	vertical-align: middle;
+	outline: none;
+	cursor: pointer;
+}
+
+.operation_button + .operation_button {
+	margin-left: 10px;
+}
+
+.operation_button:hover {
+	opacity: .75;
+}
+
+.operation_button.operation_button-start {
+	background: #2574A9;
+	color: #FFF;
+}
+
+.operation_button.operation_button-abort {
+	background: #CF000F;
+	color: #FFF;
+}
+
+.operation_button.operation_button-reset {
+	background: #95A5A6;
+	color: #FFF;
+}
+
+.message {
+	width: 50%;
+	margin: 10px auto 30px;
+}
+
+.message_text {
+	padding: 5px;
+	border-radius: 15px;
+	background: #E0E0E0;
+	font-size: 14px;
+	text-align: center;
+}
+
+.message_text[data-status="empty"] {
+	color: #FFF;
+	background: #D64541;
+}
+
+.message_text[data-status="ready"] {
+	color: #FFF;
+	background: #26A65B;
+}
+
+.message_text[data-status="running"] {
+	color: #FFF;
+	background: #E08283;
+}
+
+.message_text[data-status="complete"] {
+	color: #FFF;
+	background: #52B3D9;
+}
+
+.fileList {
+	margin: 30px 0 0;
+	padding: 10px;
+}
+
+.fileList_title {
+	margin: 0 0 10px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.fileList_ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.fileList_ul > li {
+	display: block;
+	position: relative;
+	padding: 10px 0 0;
+}
+
+.fileList_ul > li::before {
+	content: "";
+	display: block;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 20px;
+	background: #E0E0E0;
+}
+
+.fileList_ul > li + li {
+	margin-top: 10px;
+	border-top: dotted 1px #CCC;
+}
+
+.fileList_fileName {
+	display: block;
+	margin: 0;
+	font-size: 16px;
+	vertical-align: middle;
+}
+
+.fileList_remove {
+	display: block;
+	margin: 5px 0;
+	padding: 2px 5px;
+	border-radius: 3px;
+	background: #AAA;
+	color: #FFF;
+	font-size: 11px;
+	vertical-align: middle;
+	outline: none;
+	cursor: pointer;
+}
+
+.fileList_remove:hover {
+	color: #C00;
+}
+
+.fileList_progress {
+	position: relative;
+	width: 0;
+	height: 20px;
+	background: #2574A9;
+	background: linear-gradient(to bottom, #4881A8 0%, #0868A8 100%);
+	transition: width .2s linear;
+}
+
+.totalProgress {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.totalProgress_text {
+	position: relative;
+	margin: 0;
+	padding: 10px;
+	color: #787878;
+	font-size: 24px;
+	font-weight: bold;
+	letter-spacing: 2px;
+	text-align: left;
+	z-index: 200;
+}
+
+.totalProgress_bar {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 0%;
+	height: 100%;
+	background: #DADFE1;
+	transition: width .2s linear;
+}

@@ -1,0 +1,12 @@
+{
+  "env": {
+    "test": {
+      "presets": ["env", "jest"]
+    },
+    "build": {
+       "presets": [
+          ["es2015-rollup"]
+        ]
+     }
+  }
+}

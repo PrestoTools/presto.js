@@ -1,0 +1,57 @@
+{
+  "name": "presto.js",
+  "version": "0.1.0-beta",
+  "description": "JavaScript library for simultaneous file upload",
+  "author": "Yu Watanabe <watanabe.yu.1203@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PrestoTools/presto.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "babel-jest": "^23.4.2",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015-rollup": "^3.0.0",
+    "eslint": "^5.3.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-prettier": "^2.6.2",
+    "husky": "^0.14.3",
+    "jest": "^23.5.0",
+    "lint-staged": "^7.2.2",
+    "prettier": "^1.14.2",
+    "rollup": "^0.64.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "uglify-es": "^3.3.9"
+  },
+  "optionalDependencies": {
+    "formidable": "^1.2.1"
+  },
+  "scripts": {
+    "start": "npm run watch",
+    "build": "mkdir -p dist & rollup -c rollup.config.js",
+    "minify": "uglifyjs dist/presto.js -o dist/presto.min.js",
+    "watch": "mkdir -p dist & rollup -c rollup.config.js --watch",
+    "test": "jest",
+    "precommit": "lint-staged"
+  },
+  "jest": {
+    "testURL": "http://localhost/"
+  },
+  "lint-staged": {
+    "{src,example,test}/**/*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
+  "keywords": [
+    "presto.js",
+    "upload",
+    "file",
+    "form",
+    "fast"
+  ],
+  "bugs": {
+    "url": "https://github.com/PretoTools/presto.js/issues"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Presto.js pure JavaScript example</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone=no">
+	<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+<div class="content">
+	<h1 class="content_title">presto.js pure JavaScript example</h1>
+	<div class="message">
+		<p class="message_text" data-status="empty">Input file(s) first</p>
+	</div>
+	<div class="fileInput">
+		<input class="fileInput_input" type="file" multiple />
+	</div>
+	<div class="operation">
+		<button class="operation_button operation_button-start">Start</button>
+		<button class="operation_button operation_button-abort">Abort</button>
+		<button class="operation_button operation_button-reset">Reset</button>
+	</div>
+	<div class="fileList">
+		<p class="fileList_title">Upload file list</p>
+		<ul class="fileList_ul"></ul>
+	</div>
+</div>
+<div class="totalProgress">
+	<p class="totalProgress_text"></p>
+	<div class="totalProgress_bar"></div>
+</div>
+
+<script type="text/javascript" src="../../dist/presto.js"></script>
+<script type="text/javascript" src="./index.js"></script>
+</body>
+</html>
