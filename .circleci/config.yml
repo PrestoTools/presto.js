@@ -1,0 +1,23 @@
+version: 2
+jobs:
+  build:
+    machine:
+      node:
+        version: 8.11.2
+      post:
+        - npm install -g npm@6
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - run: npm install
+      - run:
+          name: Setup Code Climate test-reporter
+          command: |
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            chmod +x ./cc-test-reporter
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter before-build
+            npm test
+            ./cc-test-reporter after-build --coverage-input-type lcov --exit-code $?
