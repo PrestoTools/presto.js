@@ -7,52 +7,30 @@ module.exports = class App {
     const fileSize = parseInt(fields.size, 10);
 
     const saveDir = '../tmp';
-    const savePartDir = '../tmp/part';
-    if (!fs.existsSync(saveDir)) {
-      fs.mkdirSync(saveDir);
-    }
-    if (!fs.existsSync(savePartDir)) {
-      fs.mkdirSync(savePartDir);
-    }
+    if (!fs.existsSync(saveDir)) fs.mkdirSync(saveDir);
+    if (!fs.existsSync(`${saveDir}/part`)) fs.mkdirSync(`${saveDir}/part`);
 
-    const tmpPath = files.chunk.path;
-    const saveFilePath = `${savePartDir}/${fields.prestoId}part${fields.prestoChunkIndex}`;
+    const saveChunkPath = `${saveDir}/part/${fields.prestoId}part${fields.prestoChunkIndex}`;
+    fs.renameSync(files.chunk.path, saveChunkPath);
 
-    fs.rename(tmpPath, saveFilePath, err => {
-      if (err) throw err;
-
-      const totalChunkNumber = parseInt(fields.totalChunkNumber, 10);
-      let partFileCount = 0;
-      fs.readdir(savePartDir, (readErr, list) => {
-        if (readErr) throw err;
-
-        list.forEach(file => {
-          if (file.includes(fileId)) {
-            partFileCount += 1;
-          }
-        });
-        if (partFileCount >= totalChunkNumber) {
-          this.createFileFromChunks(savePartDir, saveDir, fileName, fileId, fileSize);
-        }
-      });
+    const totalChunkNumber = parseInt(fields.totalChunkNumber, 10);
+    fs.readdir(`${saveDir}/part`, (readErr, list) => {
+      if (readErr) throw err;
+      const partFileCount = list.filter(l => {
+        return l.includes(fileId);
+      }).length;
+      if (partFileCount >= totalChunkNumber) {
+        this.createFileFromChunks(saveDir, fileName, fileId, fileSize, partFileCount);
+      }
     });
 
     return;
   }
 
-  createFileFromChunks(savePartDir, saveDir, fileName, fileId, fileSize) {
-    let toalFiles = 0;
-
-    fs.readdirSync(savePartDir, (readErr, list) => {
-      list.forEach(file => {
-        if (file.includes(fileId)) {
-          totalFiles += 1;
-        }
-      });
-    });
-
+  createFileFromChunks(saveDir, fileName, fileId, fileSize, partFileCount) {
+    const savePartDir = `${saveDir}/part`;
     let deleteFileList = [];
-    for (let i = 0; i < totalFiles; i += 1) {
+    for (let i = 0; i < partFileCount; i += 1) {
       const partFilePath = `${savePartDir}/${fileId}part${i}`;
       fs.appendFileSync(`${saveDir}/${fileName}`, fs.readFileSync(partFilePath));
       deleteFileList.push(partFilePath);
@@ -64,7 +42,9 @@ module.exports = class App {
     }
 
     deleteFileList.forEach(partFilePath => {
-      fs.unlink(partFilePath);
+      fs.unlink(partFilePath, readErr => {
+        if (readErr) throw err;
+      });
     });
 
     return;
