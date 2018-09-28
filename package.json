@@ -35,7 +35,9 @@
     "precommit": "lint-staged"
   },
   "jest": {
-    "testURL": "http://localhost/"
+    "testURL": "http://localhost/",
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   },
   "lint-staged": {
     "{src,example,test}/**/*.js": [
