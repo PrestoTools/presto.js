@@ -1,5 +1,8 @@
 # presto.js
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/18df7bc9eeabf4d32247/maintainability)](https://codeclimate.com/github/PrestoTools/presto.js/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/18df7bc9eeabf4d32247/test_coverage)](https://codeclimate.com/github/PrestoTools/presto.js/test_coverage)
+
 ## Overview
 presto.js is a small JavaScript library for file upload.  
 Main features are:
