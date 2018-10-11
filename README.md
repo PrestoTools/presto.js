@@ -31,9 +31,6 @@ new Presto({ element: formEl, url: 'DESTINATION_URL' });
 ## Examples
 - [Minimal](https://github.com/PrestoTools/presto.js/tree/master/example/minimal)
 - [Progress bar UI](https://github.com/PrestoTools/presto.js/tree/master/example/progress-bar)
-- Angular (TBD)
-- React (TBD)
-- Vue.js (TBD)
 
 Server side examples:
 - [PHP](https://github.com/PrestoTools/presto.js/tree/master/example/server-php)
