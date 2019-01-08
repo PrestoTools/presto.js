@@ -2,9 +2,14 @@ import Presto from '../src/Presto';
 import PrestoFile from '../src/core/PrestoFile';
 
 describe('Presto initialize', () => {
+  const presto = new Presto({});
+
   test('Generate Presto instance', () => {
-    const presto = new Presto({});
     expect(presto).toBeInstanceOf(Presto);
+  });
+
+  test('Default HTTP header', () => {
+    expect(Object.keys(presto.options.httpHeaders())).toHaveLength(0);
   });
 });
 
@@ -32,7 +37,7 @@ describe('Add / Remove / Reset files', () => {
   const anotherFileListObjct = [{ name: 'anotherFileName' }];
 
   test('Add files', () => {
-    presto.add(dummyFileListObjct);
+    presto.add(dummyFileListObjct, {});
     expect(presto.fileList).toHaveLength(1);
     expect(presto.fileList[0]).toBeInstanceOf(PrestoFile);
   });
@@ -41,17 +46,17 @@ describe('Add / Remove / Reset files', () => {
     const prestoId = presto.fileList[0].prestoId;
     presto.remove(prestoId);
     expect(presto.fileList).toHaveLength(0);
-    presto.add(dummyFileListObjct);
+    presto.add(dummyFileListObjct, {});
     presto.remove();
     expect(presto.fileList).toHaveLength(0);
   });
 
   test('Reset files', () => {
-    presto.add(dummyFileListObjct);
+    presto.add(dummyFileListObjct, {});
     presto.reset();
     expect(presto.fileList).toHaveLength(0);
-    presto.add(dummyFileListObjct);
-    presto.reset(anotherFileListObjct);
+    presto.add(dummyFileListObjct, {});
+    presto.reset(anotherFileListObjct, {});
     expect(presto.fileList).toHaveLength(1);
     expect(presto.fileList[0].name).toBe('anotherFileName');
   });
@@ -65,8 +70,8 @@ describe('Start / Abort', () => {
       return new Blob();
     }
   };
-  const prestoFile1 = new PrestoFile(dummyFileObject, presto.options);
-  const prestoFile2 = new PrestoFile(dummyFileObject, presto.options);
+  const prestoFile1 = new PrestoFile(dummyFileObject, {}, presto.options);
+  const prestoFile2 = new PrestoFile(dummyFileObject, {}, presto.options);
   presto.fileList.push(prestoFile1, prestoFile2);
   beforeAll(() => {
     const _uploaderLoopSpy = jest.spyOn(presto.uploader, '_loop').mockImplementation();
@@ -121,8 +126,8 @@ describe('Start / Abort', () => {
 
 describe('Progress', () => {
   const presto = new Presto({});
-  const prestoFile1 = new PrestoFile({ size: 3500000 }, presto.options);
-  const prestoFile2 = new PrestoFile({ size: 1500000 }, presto.options);
+  const prestoFile1 = new PrestoFile({ size: 3500000 }, {}, presto.options);
+  const prestoFile2 = new PrestoFile({ size: 1500000 }, {}, presto.options);
   presto.fileList.push(prestoFile1, prestoFile2);
   test('No progress yet', () => {
     expect(presto.progress()).toBe(0);
@@ -137,8 +142,8 @@ describe('Progress', () => {
 
 describe('Get next chunk', () => {
   const presto = new Presto({});
-  const prestoFile1 = new PrestoFile({ size: 3500000 }, presto.options);
-  const prestoFile2 = new PrestoFile({ size: 1500000 }, presto.options);
+  const prestoFile1 = new PrestoFile({ size: 3500000 }, {}, presto.options);
+  const prestoFile2 = new PrestoFile({ size: 1500000 }, {}, presto.options);
   beforeAll(() => {
     const _file1SliceBlobSpy = jest.spyOn(prestoFile1, '_sliceBlob').mockImplementation();
     const _file2SliceBlobSpy = jest.spyOn(prestoFile2, '_sliceBlob').mockImplementation();
@@ -171,7 +176,7 @@ describe('Get next chunk', () => {
 
 describe('Listen file events', () => {
   const presto = new Presto({});
-  const prestoFile = new PrestoFile({}, presto.options);
+  const prestoFile = new PrestoFile({}, {}, presto.options);
   presto._setFileEvents(prestoFile);
   const fileProgressCallback = jest.fn();
   const progressCallback = jest.fn();

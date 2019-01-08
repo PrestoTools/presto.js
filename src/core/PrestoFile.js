@@ -2,7 +2,7 @@ import EventDispatcher from './EventDispatcher';
 import { humanReadableSize } from '../utils';
 
 export default class PrestoFile {
-  constructor(fileObject, options) {
+  constructor(fileObject, data, options) {
     this.fileObject = fileObject;
     this.prestoId = options.uniqueIdGenerator(fileObject);
     this.status = 'waiting'; //waiting,ready,sending,pending,closing,done,error
@@ -15,6 +15,7 @@ export default class PrestoFile {
     this.successChunkCount = 0;
     this.errorChunkIndexList = [];
     this.eventDispatcher = new EventDispatcher();
+    this.data = data;
   }
 
   //events
@@ -62,6 +63,7 @@ export default class PrestoFile {
       totalChunkNumber: this.totalChunkNumber,
       name: this.name,
       size: this.size,
+      data: this.data,
       onSuccess: this.chunkSuccess.bind(this),
       onError: this.chunkError.bind(this)
     };

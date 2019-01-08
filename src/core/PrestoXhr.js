@@ -39,6 +39,9 @@ export default class PrestoXhr {
     this.formData[setMethod]('totalChunkNumber', chunkData.totalChunkNumber);
     this.formData[setMethod]('name', chunkData.name);
     this.formData[setMethod]('size', chunkData.size);
+    Object.keys(chunkData.data).forEach(key => {
+      this.formData[setMethod](key, chunkData.data[key]);
+    });
   }
 
   _setHeaders() {

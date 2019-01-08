@@ -62,9 +62,9 @@ const presto = new Presto({ url: '/api/upload', ... });
 ### Methods
 - ```Presto.on(string eventName, function callback)```: Add event listener to Presto.
 - ```Presto.off(string eventName, function callback)```: Remove event listener from Presto.
-- ```Presto.add(HTML5 FileList object)```: Add file(s) to Presto.
+- ```Presto.add(HTML5 FileList object, object optional form data)```: Add file(s) to Presto.
 - ```Presto.remove(string prestoId)```: Remove file from Presto. If nothing is specified, remove all files.
-- ```Presto.reset(HTML5 FileList object)```: Replace ```Presto.fileList``` with specified file list. If nothing is specified, remove all files.
+- ```Presto.reset(HTML5 FileList object, object optional form data)```: Replace ```Presto.fileList``` with specified file list. If nothing is specified, remove all files.
 - ```Presto.send(string prestoId)```: Start file upload of the specified file. If nothing is specified, upload all files.
 - ```Presto.abort(string prestoId)```: Abort file upload of the specified file. If nothing is specified, abort all files.
 - ```Presto.progress(string prestoId)```: Return upload progress (float number between 0 - 1) of the specified file. If nothing is specified, return progress for all files.
