@@ -158,7 +158,7 @@ export default class Presto {
       this.fire('fileAbort', [_prestoFile]);
     });
     prestoFile.on('complete', _prestoFile => {
-      this.fire('fileComplete', _prestoFile);
+      this.fire('fileComplete', [_prestoFile]);
     });
     prestoFile.on('error', (chunkIndex, statusCode, statusText, _prestoFile) => {
       this.fire('fileError', [chunkIndex, statusCode, statusText, _prestoFile]);
