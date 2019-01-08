@@ -2,9 +2,14 @@ import Presto from '../src/Presto';
 import PrestoFile from '../src/core/PrestoFile';
 
 describe('Presto initialize', () => {
+  const presto = new Presto({});
+
   test('Generate Presto instance', () => {
-    const presto = new Presto({});
     expect(presto).toBeInstanceOf(Presto);
+  });
+
+  test('Default HTTP header', () => {
+    expect(Object.keys(presto.options.httpHeaders())).toHaveLength(0);
   });
 });
 
