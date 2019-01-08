@@ -39,10 +39,10 @@ export default class Presto {
     this.eventDispatcher.dispatch(event, args);
   }
 
-  add(fileList) {
+  add(fileList, data = {}) {
     let addedList = [];
     Array.from(fileList).forEach(f => {
-      const prestoFile = new PrestoFile(f, this.options);
+      const prestoFile = new PrestoFile(f, data, this.options);
       this.fileList.push(prestoFile);
       addedList.push(prestoFile);
       this._setFileEvents(prestoFile);
@@ -65,10 +65,10 @@ export default class Presto {
     this.fire('removed', [[prestoId]]);
   }
 
-  reset(fileList) {
+  reset(fileList, data = {}) {
     this.fileList = [];
     if (fileList !== undefined && fileList !== null) {
-      this.add(fileList);
+      this.add(fileList, data);
     }
     this.fire('reset');
   }

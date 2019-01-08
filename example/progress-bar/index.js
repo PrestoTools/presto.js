@@ -57,7 +57,7 @@ presto.on('complete', msec => {
 });
 
 inputEl.addEventListener('change', () => {
-  presto.add(inputEl.files);
+  presto.add(inputEl.files, { testParam: 'Set additional form data here' });
 });
 
 startButton.addEventListener('click', () => {
