@@ -1,6 +1,6 @@
 {
   "name": "presto.js",
-  "version": "0.2.0-beta",
+  "version": "1.0.0",
   "description": "JavaScript library for simultaneous file upload",
   "author": "Yu Watanabe <watanabe.yu.1203@gmail.com>",
   "repository": {
