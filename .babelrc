@@ -1,7 +1,9 @@
 {
   "env": {
     "test": {
-      "presets": ["env", "jest"]
+      "presets": [
+        ["@babel/preset-env", {"targets": {"node": "current"}}]
+      ]
     },
     "build": {
        "presets": [

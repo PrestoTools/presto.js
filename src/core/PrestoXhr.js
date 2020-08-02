@@ -18,7 +18,7 @@ export default class PrestoXhr {
           reject(chunkData.chunkIndex, this.xhr.status, this.xhr.statusText);
         }
       };
-      this.xhr.onerror = error => {
+      this.xhr.onerror = (error) => {
         reject(chunkData.chunkIndex, this.xhr.status, this.xhr.statusText);
       };
       this.xhr.send(this.formData);
@@ -39,14 +39,14 @@ export default class PrestoXhr {
     this.formData[setMethod]('totalChunkNumber', chunkData.totalChunkNumber);
     this.formData[setMethod]('name', chunkData.name);
     this.formData[setMethod]('size', chunkData.size);
-    Object.keys(chunkData.data).forEach(key => {
+    Object.keys(chunkData.data).forEach((key) => {
       this.formData[setMethod](key, chunkData.data[key]);
     });
   }
 
   _setHeaders() {
     const headers = this.options.httpHeaders();
-    Object.keys(headers).forEach(key => {
+    Object.keys(headers).forEach((key) => {
       this.xhr.setRequestHeader(key, headers[key]);
     });
   }

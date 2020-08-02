@@ -151,13 +151,13 @@ export default class Presto {
       this.fire('fileProgress', [fileProgress, _prestoFile]);
       this.fire('progress', [this.progress()]);
     });
-    prestoFile.on('start', _prestoFile => {
+    prestoFile.on('start', (_prestoFile) => {
       this.fire('fileStart', [_prestoFile]);
     });
-    prestoFile.on('abort', _prestoFile => {
+    prestoFile.on('abort', (_prestoFile) => {
       this.fire('fileAbort', [_prestoFile]);
     });
-    prestoFile.on('complete', _prestoFile => {
+    prestoFile.on('complete', (_prestoFile) => {
       this.fire('fileComplete', [_prestoFile]);
     });
     prestoFile.on('error', (chunkIndex, statusCode, statusText, _prestoFile) => {

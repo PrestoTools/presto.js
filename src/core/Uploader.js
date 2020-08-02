@@ -6,7 +6,7 @@ export default class Uploader {
     this.getNextChunk = getNextChunk;
     this.pool = Array(options.simultaneous)
       .fill(null)
-      .map(s => {
+      .map((s) => {
         return new PrestoXhr(options);
       });
     this.sending = false;
@@ -15,7 +15,7 @@ export default class Uploader {
   start() {
     this.sending = true;
     this.startTime = Date.now();
-    this.pool.forEach(prestoXhr => {
+    this.pool.forEach((prestoXhr) => {
       this._loop(prestoXhr);
     });
   }
@@ -35,7 +35,7 @@ export default class Uploader {
       return;
     }
     prestoXhr.sendChunk(chunkData).then(
-      chunkIndex => {
+      (chunkIndex) => {
         chunkData.onSuccess();
         if (this.sending === true) {
           this._loop(prestoXhr);

@@ -20,7 +20,7 @@ export default class EventDispatcher {
       if (k === event) {
         let updated = [];
         if (Array.isArray(this.events[k])) {
-          this.events[k].forEach(callback => {
+          this.events[k].forEach((callback) => {
             if (callback !== fn) {
               updated.push(callback);
             }
@@ -39,7 +39,7 @@ export default class EventDispatcher {
     if (this.events[event] === undefined) {
       return;
     }
-    this.events[event].forEach(callback => {
+    this.events[event].forEach((callback) => {
       callback(...argArray);
     });
   }

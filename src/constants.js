@@ -8,7 +8,7 @@ export const defaultOptions = {
   httpHeaders: () => {
     return {};
   },
-  uniqueIdGenerator: fileObject => {
+  uniqueIdGenerator: (fileObject) => {
     return `presto_${genUUIDv4()}`;
   },
   withCredentials: false
