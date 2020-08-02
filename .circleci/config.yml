@@ -3,7 +3,7 @@ jobs:
   build:
     machine:
       node:
-        version: 12.16.1
+        version: 10.20.1
       post:
         - npm install -g npm@6
     working_directory: ~/repo
