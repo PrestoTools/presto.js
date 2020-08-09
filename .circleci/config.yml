@@ -1,11 +1,8 @@
-version: 2
+version: 2.1
 jobs:
   build:
-    machine:
-      node:
-        version: 12.16.1
-      post:
-        - npm install -g npm@7
+    docker:
+      - image: circleci/node:chakracore-10.13
     working_directory: ~/repo
     steps:
       - checkout
