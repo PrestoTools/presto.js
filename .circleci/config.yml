@@ -3,9 +3,9 @@ jobs:
   build:
     machine:
       node:
-        version: 10.20.1
+        version: 12.16.1
       post:
-        - npm install -g npm@6
+        - npm install -g npm@7
     working_directory: ~/repo
     steps:
       - checkout
