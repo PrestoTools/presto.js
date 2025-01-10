@@ -1,15 +1,15 @@
-import { genUUIDv4 } from './utils';
+import { genUUIDv4 } from "./utils";
 
 export const defaultOptions = {
   element: null,
   chunkSize: 1 * 1024 * 1024, //1MB
   simultaneous: 6,
-  url: '',
+  url: "",
   httpHeaders: () => {
     return {};
   },
-  uniqueIdGenerator: fileObject => {
+  uniqueIdGenerator: () => {
     return `presto_${genUUIDv4()}`;
   },
-  withCredentials: false
+  withCredentials: false,
 };

@@ -1,198 +1,209 @@
-import Presto from '../src/Presto';
-import PrestoFile from '../src/core/PrestoFile';
+import { describe, expect, test, vi } from 'vitest'
 
-describe('PrestoFile initialize', () => {
+import Presto from "../src/Presto";
+import PrestoFile from "../src/core/PrestoFile";
+
+describe("PrestoFile initialize", () => {
   const presto = new Presto();
-  test('Generate PrestoFile instance', () => {
+  test("Generate PrestoFile instance", () => {
     const prestoFile = new PrestoFile({}, {}, presto.options);
     expect(prestoFile).toBeInstanceOf(PrestoFile);
   });
 });
 
-describe('PrestoFile event listener', () => {
+describe("PrestoFile event listener", () => {
   const presto = new Presto({});
   const prestoFile = new PrestoFile({}, {}, presto.options);
-  const callback = jest.fn();
+  const callback = vi.fn();
 
-  test('Add event listener', () => {
-    prestoFile.on('start', callback);
+  test("Add event listener", () => {
+    prestoFile.on("start", callback);
     prestoFile.send();
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  test('Remove event listener', () => {
-    prestoFile.on('start', callback);
-    prestoFile.off('start', callback);
+  test("Remove event listener", () => {
+    prestoFile.on("start", callback);
+    prestoFile.off("start", callback);
     prestoFile.send();
     expect(callback).toHaveBeenCalledTimes(1);
   });
 });
 
-describe('Get file properties', () => {
+describe("Get file properties", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
-    size: 123456789
+    name: "testFileName",
+    size: 123456789,
   };
   const prestoFile = new PrestoFile(dummyFileObject, {}, presto.options);
-  test('Get file properties', () => {
-    expect(prestoFile.name).toBe('testFileName');
+  test("Get file properties", () => {
+    expect(prestoFile.name).toBe("testFileName");
     expect(prestoFile.size).toBe(123456789);
-    expect(prestoFile.displaySize).toBe('117.7 MB');
+    expect(prestoFile.displaySize).toBe("117.7 MB");
     expect(prestoFile.totalChunkNumber).toBe(118);
   });
 });
 
-describe('Send / Abort file', () => {
+describe("Send / Abort file", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
-    size: 123456
+    name: "testFileName",
+    size: 123456,
   };
   const prestoFile = new PrestoFile(dummyFileObject, {}, presto.options);
 
-  test('Send file', () => {
-    const sendCallback = jest.fn();
-    prestoFile.on('start', sendCallback);
+  test("Send file", () => {
+    const sendCallback = vi.fn();
+    prestoFile.on("start", sendCallback);
     prestoFile.send();
-    expect(prestoFile.status).toBe('ready');
+    expect(prestoFile.status).toBe("ready");
     expect(sendCallback).toHaveBeenCalledWith(prestoFile);
   });
 
-  test('Abort file', () => {
-    const abortCallback = jest.fn();
-    prestoFile.on('abort', abortCallback);
-    prestoFile.status = 'waiting';
+  test("Abort file", () => {
+    const abortCallback = vi.fn();
+    prestoFile.on("abort", abortCallback);
+    prestoFile.status = "waiting";
     prestoFile.abort();
-    expect(prestoFile.status).not.toBe('pending');
+    expect(prestoFile.status).not.toBe("pending");
     expect(abortCallback).toHaveBeenCalledTimes(0);
-    prestoFile.status = 'ready';
+    prestoFile.status = "ready";
     prestoFile.abort();
-    expect(prestoFile.status).toBe('pending');
+    expect(prestoFile.status).toBe("pending");
     expect(abortCallback).toHaveBeenCalledWith(prestoFile);
   });
 });
 
-describe('Get next chunk', () => {
+describe("Get next chunk", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
+    name: "testFileName",
     size: 3500000,
     slice: () => {
       return new Blob();
-    }
+    },
   };
-  const prestoFile = new PrestoFile(dummyFileObject, { testParam: 'test_text' }, presto.options);
+  const prestoFile = new PrestoFile(
+    dummyFileObject,
+    { testParam: "test_text" },
+    presto.options,
+  );
 
-  test('Not in the queue', () => {
+  test("Not in the queue", () => {
     expect(prestoFile.getNextChunk()).toBeNull();
   });
 
-  test('Chunk number', () => {
+  test("Chunk number", () => {
     expect(prestoFile.totalChunkNumber).toBe(4);
   });
 
-  test('Request first chunk', () => {
+  test("Request first chunk", () => {
     prestoFile.send();
     const firstChunk = prestoFile.getNextChunk();
     prestoFile.chunkSuccess();
-    expect(firstChunk).toHaveProperty('chunkIndex', 0);
+    expect(firstChunk).toHaveProperty("chunkIndex", 0);
   });
 
-  test('Optional form data', () => {
+  test("Optional form data", () => {
     const chunk = prestoFile.getNextChunk();
     prestoFile.chunkSuccess();
-    expect(chunk.data.testParam).toBe('test_text');
+    expect(chunk.data.testParam).toBe("test_text");
   });
 
-  test('Request last chunk', () => {
+  test("Request last chunk", () => {
     prestoFile.getNextChunk();
     prestoFile.chunkSuccess();
     const nextChunk = prestoFile.getNextChunk();
     expect(nextChunk).not.toBeNull();
-    expect(prestoFile.status).toBe('closing');
+    expect(prestoFile.status).toBe("closing");
   });
 
-  test('Request after last chunk', () => {
+  test("Request after last chunk", () => {
     const nextChunk = prestoFile.getNextChunk();
     expect(nextChunk).toBeNull();
-    expect(prestoFile.status).toBe('closing');
+    expect(prestoFile.status).toBe("closing");
   });
 });
 
-describe('Chunk success', () => {
+describe("Chunk success", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
-    size: 2500000
+    name: "testFileName",
+    size: 2500000,
   };
   const prestoFile = new PrestoFile(dummyFileObject, {}, presto.options);
-  const callback = jest.fn();
-  prestoFile.on('progress', callback);
+  const callback = vi.fn();
+  prestoFile.on("progress", callback);
 
-  test('Success first chunk', () => {
+  test("Success first chunk", () => {
     prestoFile.chunkSuccess();
     expect(prestoFile.successChunkCount).toBe(1);
     expect(callback).toHaveBeenCalledTimes(1);
   });
 
-  test('Success last chunk', () => {
+  test("Success last chunk", () => {
     prestoFile.chunkSuccess();
     prestoFile.chunkSuccess();
     expect(callback).toHaveBeenCalledWith(1, prestoFile);
-    expect(prestoFile.status).toBe('done');
+    expect(prestoFile.status).toBe("done");
   });
 });
 
-describe('Chunk error', () => {
+describe("Chunk error", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
+    name: "testFileName",
     size: 2500000,
     slice: () => {
       return new Blob();
-    }
+    },
   };
   const prestoFile = new PrestoFile(dummyFileObject, {}, presto.options);
-  const callback = jest.fn();
-  prestoFile.on('error', callback);
+  const callback = vi.fn();
+  prestoFile.on("error", callback);
 
-  test('Error first chunk', () => {
+  test("Error first chunk", () => {
     prestoFile.getNextChunk();
-    prestoFile.chunkError(0, 500, 'Internal Server Error');
+    prestoFile.chunkError(0, 500, "Internal Server Error");
     expect(prestoFile.successChunkCount).toBe(0);
     expect(prestoFile.errorChunkIndexList).toEqual([0]);
-    expect(callback).toHaveBeenCalledWith(0, 500, 'Internal Server Error', prestoFile);
+    expect(callback).toHaveBeenCalledWith(
+      0,
+      500,
+      "Internal Server Error",
+      prestoFile,
+    );
   });
 
-  test('Error last chunk', () => {
+  test("Error last chunk", () => {
     prestoFile.getNextChunk();
     prestoFile.chunkSuccess();
     prestoFile.getNextChunk();
     prestoFile.chunkSuccess();
     prestoFile.getNextChunk();
     prestoFile.getNextChunk();
-    expect(prestoFile.status).toBe('closing');
-    prestoFile.chunkError(0, 500, 'Internal Server Error');
-    expect(prestoFile.status).toBe('sending');
+    expect(prestoFile.status).toBe("closing");
+    prestoFile.chunkError(0, 500, "Internal Server Error");
+    expect(prestoFile.status).toBe("sending");
   });
 });
 
-describe('Slice blob', () => {
+describe("Slice blob", () => {
   const presto = new Presto({});
   const dummyFileObject = {
-    name: 'testFileName',
+    name: "testFileName",
     size: 2500000,
     slice: (start, stop) => {
       return stop > 2500000 ? 2500000 : stop;
-    }
+    },
   };
   const prestoFile = new PrestoFile(dummyFileObject, {}, presto.options);
-  test('Bigger than file size', () => {
+  test("Bigger than file size", () => {
     const blob = prestoFile._sliceBlob(5);
     expect(blob).toBeNull;
   });
-  test('Last blob', () => {
+  test("Last blob", () => {
     const blob = prestoFile._sliceBlob(2);
     expect(blob).toBe(2500000);
   });

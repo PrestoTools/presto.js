@@ -1,8 +1,8 @@
-import Uploader from './core/Uploader';
-import PrestoFile from './core/PrestoFile';
-import EventDispatcher from './core/EventDispatcher';
+import Uploader from "./core/Uploader";
+import PrestoFile from "./core/PrestoFile";
+import EventDispatcher from "./core/EventDispatcher";
 
-import { defaultOptions } from './constants';
+import { defaultOptions } from "./constants";
 
 export default class Presto {
   constructor(options = {}) {
@@ -11,16 +11,16 @@ export default class Presto {
     this.uploader = new Uploader(this.options, this.getNextChunk.bind(this));
     this.startTime = null;
     this.eventDispatcher = new EventDispatcher();
-    if (typeof options.element === 'object') {
+    if (typeof options.element === "object") {
       this._initWithFormElement(options.element);
     }
   }
 
   _initWithFormElement(el) {
-    el.querySelector('input[type="file"]').addEventListener('change', e => {
+    el.querySelector('input[type="file"]').addEventListener("change", (e) => {
       this.reset.call(this, e.target.files);
     });
-    el.addEventListener('submit', e => {
+    el.addEventListener("submit", (e) => {
       e.preventDefault();
       this.send.call(this);
     });
@@ -41,28 +41,28 @@ export default class Presto {
 
   add(fileList, data = {}) {
     let addedList = [];
-    Array.from(fileList).forEach(f => {
+    Array.from(fileList).forEach((f) => {
       const prestoFile = new PrestoFile(f, data, this.options);
       this.fileList.push(prestoFile);
       addedList.push(prestoFile);
       this._setFileEvents(prestoFile);
     });
-    this.fire('added', [addedList]);
+    this.fire("added", [addedList]);
   }
 
   remove(prestoId) {
     if (prestoId === undefined || prestoId === null) {
-      const removedIdList = this.fileList.map(f => {
+      const removedIdList = this.fileList.map((f) => {
         return f.prestoId;
       });
       this.fileList = [];
-      this.fire('removed', [removedIdList]);
+      this.fire("removed", [removedIdList]);
       return;
     }
-    this.fileList = this.fileList.filter(f => {
+    this.fileList = this.fileList.filter((f) => {
       return f.prestoId !== prestoId;
     });
-    this.fire('removed', [[prestoId]]);
+    this.fire("removed", [[prestoId]]);
   }
 
   reset(fileList, data = {}) {
@@ -70,25 +70,25 @@ export default class Presto {
     if (fileList !== undefined && fileList !== null) {
       this.add(fileList, data);
     }
-    this.fire('reset');
+    this.fire("reset");
   }
 
   send(prestoId) {
     if (prestoId === undefined || prestoId === null) {
-      this.fileList.forEach(f => {
+      this.fileList.forEach((f) => {
         f.send();
       });
     }
 
-    const targetFile = this.fileList.find(f => {
+    const targetFile = this.fileList.find((f) => {
       return f.prestoId === prestoId;
     });
     if (targetFile !== undefined) {
       targetFile.send();
     }
 
-    const firstFile = this.fileList.find(f => {
-      return f.status === 'ready';
+    const firstFile = this.fileList.find((f) => {
+      return f.status === "ready";
     });
     if (firstFile === undefined) {
       return;
@@ -96,7 +96,7 @@ export default class Presto {
     if (this.uploader.sending === false) {
       this.uploader.start();
       this.startTime = Date.now();
-      this.fire('start');
+      this.fire("start");
     }
   }
 
@@ -107,19 +107,19 @@ export default class Presto {
     if (prestoId === undefined || prestoId === null) {
       this.uploader.stop();
     }
-    const targetFile = this.fileList.find(f => {
+    const targetFile = this.fileList.find((f) => {
       return f.prestoId === prestoId;
     });
     if (targetFile !== undefined) {
       targetFile.abort();
     }
-    this.fire('abort');
+    this.fire("abort");
   }
 
   progress() {
     let total = 0;
     let send = 0;
-    this.fileList.forEach(f => {
+    this.fileList.forEach((f) => {
       total += f.size;
       send += f.size * f.progress();
     });
@@ -130,16 +130,16 @@ export default class Presto {
   }
 
   getNextChunk() {
-    const targetFile = this.fileList.find(f => {
-      return ['ready', 'sending'].includes(f.status);
+    const targetFile = this.fileList.find((f) => {
+      return ["ready", "sending"].includes(f.status);
     });
     if (targetFile === undefined) {
-      const unfinishedFile = this.fileList.find(f => {
-        return ['ready', 'sending', 'closing', 'pending'].includes(f.status);
+      const unfinishedFile = this.fileList.find((f) => {
+        return ["ready", "sending", "closing", "pending"].includes(f.status);
       });
       if (unfinishedFile === undefined) {
         this.uploader.stop();
-        this.fire('complete', [Date.now() - this.startTime]);
+        this.fire("complete", [Date.now() - this.startTime]);
       }
       return null;
     }
@@ -147,21 +147,29 @@ export default class Presto {
   }
 
   _setFileEvents(prestoFile) {
-    prestoFile.on('progress', (fileProgress, _prestoFile) => {
-      this.fire('fileProgress', [fileProgress, _prestoFile]);
-      this.fire('progress', [this.progress()]);
+    prestoFile.on("progress", (fileProgress, _prestoFile) => {
+      this.fire("fileProgress", [fileProgress, _prestoFile]);
+      this.fire("progress", [this.progress()]);
     });
-    prestoFile.on('start', _prestoFile => {
-      this.fire('fileStart', [_prestoFile]);
+    prestoFile.on("start", (_prestoFile) => {
+      this.fire("fileStart", [_prestoFile]);
     });
-    prestoFile.on('abort', _prestoFile => {
-      this.fire('fileAbort', [_prestoFile]);
+    prestoFile.on("abort", (_prestoFile) => {
+      this.fire("fileAbort", [_prestoFile]);
     });
-    prestoFile.on('complete', _prestoFile => {
-      this.fire('fileComplete', [_prestoFile]);
+    prestoFile.on("complete", (_prestoFile) => {
+      this.fire("fileComplete", [_prestoFile]);
     });
-    prestoFile.on('error', (chunkIndex, statusCode, statusText, _prestoFile) => {
-      this.fire('fileError', [chunkIndex, statusCode, statusText, _prestoFile]);
-    });
+    prestoFile.on(
+      "error",
+      (chunkIndex, statusCode, statusText, _prestoFile) => {
+        this.fire("fileError", [
+          chunkIndex,
+          statusCode,
+          statusText,
+          _prestoFile,
+        ]);
+      },
+    );
   }
 }
